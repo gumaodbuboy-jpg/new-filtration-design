@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="fil">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#f5f5ed">
+<title>Panlinis ng Tubig sa San Jose del Monte — Natural 3D</title>
+<style>
+:root{--ink:#233e36;--muted:#708076;--green:#285b48;--line:#dce3d8;--paper:#fffffff0}
+*{box-sizing:border-box}body{margin:0;background:#e5ede5;color:var(--ink);font-family:Inter,"Segoe UI",Arial,sans-serif;overflow:hidden}button,input{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid #c49443;outline-offset:3px}button:disabled{opacity:.45;cursor:wait}
+#viewport{position:fixed;inset:0}#scene{display:block;width:100%;height:100%;touch-action:none}header{position:fixed;left:28px;top:25px;z-index:2;pointer-events:none}.eyebrow{font-size:10px;font-weight:700;letter-spacing:2.2px;text-transform:uppercase;color:#4d6e5c}h1{margin:7px 0 6px;font-size:clamp(19px,2.1vw,30px);line-height:1.17;letter-spacing:-.9px;font-weight:650;max-width:550px}header p{font-size:11px;margin:3px 0;color:#536b5c}header .credit{font-size:10px;color:#738574}
+.panel{position:fixed;z-index:3;border:1px solid #fff;border-radius:17px;background:var(--paper);box-shadow:0 12px 45px #23422d12;backdrop-filter:blur(16px);scrollbar-width:thin;scrollbar-color:#bacbbb transparent}#left{left:26px;top:151px;width:254px;max-height:calc(100dvh - 180px);overflow-y:auto;padding:21px}h2{font-size:14px;font-weight:650;margin:0 0 5px}h3{font-size:10px;letter-spacing:1.2px;text-transform:uppercase;margin:22px 0 10px;color:#758477}.sub{font-size:10px;color:var(--muted);line-height:1.5;margin:0 0 16px}.control{display:flex;align-items:center;justify-content:space-between;width:100%;border:1px solid var(--line);border-radius:9px;background:#f9fbf7;padding:11px 12px;margin:7px 0;text-align:left;font-size:11px;font-weight:600;color:var(--ink);min-height:38px;transition:background .2s,transform .2s}.control:hover{background:#edf4eb;transform:translateY(-1px)}.control.primary{background:var(--green);color:#fff;border-color:var(--green)}.control.primary:hover{background:#1e4838}.control.active:not(.primary){background:#e8f2e7;border-color:#a8c1a8}.control::after{content:'+';font-size:16px;opacity:.65}.control.active::after{content:'−'}.material{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #edf0e9;font-size:11px;cursor:pointer}.material:last-of-type{border:0}.swatch{width:27px;height:27px;flex-shrink:0;border-radius:8px;box-shadow:inset 0 0 0 1px #0001}.gravel{background:radial-gradient(ellipse at 30% 30%,#aaa89b 0 20%,transparent 22%),radial-gradient(ellipse at 65% 68%,#777c70 0 27%,transparent 30%),#96998c}.husk{background:repeating-linear-gradient(29deg,#8e623b 0 1px,#b08a5f 2px,#64472d 4px)}.corn{background:radial-gradient(#986634 30%,transparent 36%) 0 0/6px 6px,#d9ae6c}.sand{background:repeating-conic-gradient(#cbb387 0 25%,#e7d6ab 0 50%) 0 0/3px 3px}.paper{background:linear-gradient(135deg,#fffef6,#dfdfcb)}.material input{margin-left:auto;accent-color:var(--green);width:14px;height:14px}.status{margin-top:17px;padding-top:15px;border-top:1px solid var(--line)}.statusline{display:flex;justify-content:space-between;font-size:10px;margin:9px 0;gap:8px}.statusline strong{font-weight:600}.meter{height:5px;background:#e5ebe3;border-radius:10px;overflow:hidden;margin:6px 0 13px}.meter div{height:100%;width:20%;border-radius:10px;background:#699d86;transition:width .25s}.meter.bucket div{width:0%;background:#74a8b4}.note{font-size:10px;line-height:1.6;color:#738171;margin-bottom:0}#right{right:24px;top:26px;width:234px;padding:18px}summary{font-size:12px;font-weight:650;cursor:pointer;list-style:none;display:flex;justify-content:space-between}summary::after{content:'−';color:#7e927d}details:not([open]) summary::after{content:'+'}#right p{font-size:11px;line-height:1.6;margin:12px 0;color:#647466}#right b{color:#35533e;font-size:11px}#right hr{border:0;border-top:1px solid var(--line);margin:17px 0}.badge{display:inline-flex;align-items:center;gap:7px;font-size:9px;letter-spacing:1px;color:#63816c;margin-top:15px;text-transform:uppercase}.badge::before{content:'';width:6px;height:6px;border-radius:50%;background:#6e997b}
+#viewtools{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);z-index:3;display:flex;padding:5px;gap:3px;background:#fffffff2;border:1px solid #fff;border-radius:12px;box-shadow:0 6px 28px #1d3c2d12}.viewbutton{border:0;background:transparent;padding:10px 15px;font-size:11px;color:#5c715e;border-radius:8px;white-space:nowrap}.viewbutton:hover,.viewbutton.active{background:#e9f0e5;color:#29523d}#hint{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);z-index:2;font-size:10px;color:#4e6d58;text-align:center;white-space:nowrap;pointer-events:none;background:#eef3e3c9;padding:5px 11px;border-radius:20px}#load{position:fixed;inset:0;background:#edf1e6ee;z-index:10;display:grid;place-content:center;text-align:center;font-size:13px;color:#47614e;padding:25px}#load.hidden{display:none}#load strong{font-size:20px;margin-bottom:10px}#load span{max-width:380px;line-height:1.7}#load small{margin-top:15px;color:#738273}.mobile-toggle{display:none}#live{position:fixed;bottom:28px;right:28px;color:#537059;font-size:10px;max-width:210px;text-align:right}#live::before{content:'●';color:#7b9e7c;margin-right:7px}
+@media(max-width:1100px){#right{width:200px;right:16px}#left{left:16px;width:224px;padding:17px}header{left:18px}h1{max-width:460px;font-size:24px}#live{display:none}}
+@media(max-width:900px){header{left:18px;top:18px;right:18px}h1{font-size:21px;max-width:340px}header p{font-size:10px}header .credit{font-size:9px}.eyebrow{font-size:9px}#right{top:128px;right:12px;width:193px;padding:13px;max-height:calc(100dvh - 230px);overflow:auto}#right:not([open]){width:145px}#right p{font-size:10px}#left{top:auto;bottom:90px;left:12px;max-height:calc(100dvh - 230px);width:224px;display:none}body.controls-open #left{display:block}.mobile-toggle{display:block;position:fixed;left:12px;bottom:90px;z-index:4;border:1px solid #cfdcce;background:#ffffffed;padding:12px 17px;border-radius:10px;font-size:11px;color:var(--green);box-shadow:0 3px 18px #0001}body.controls-open .mobile-toggle{bottom:45px}#viewtools{bottom:15px;left:auto;right:12px;transform:none}.viewbutton{padding:11px 10px;font-size:10px}#hint{bottom:66px;left:auto;right:17px;transform:none;font-size:9px}.panel{border-radius:12px}}
+#right{max-height:calc(100dvh - 52px);overflow-y:auto}
+@media(max-width:900px){
+ #viewport{inset:125px 0 92px}
+ #right{top:130px;max-height:calc(100dvh - 235px)}
+ #viewtools{right:12px;left:12px;justify-content:space-around;bottom:max(12px,env(safe-area-inset-bottom))}
+ .viewbutton{flex:1;padding:12px 5px;min-height:42px}
+ .mobile-toggle{bottom:105px;min-height:44px}
+ body.controls-open .mobile-toggle{bottom:105px}
+ #left{bottom:158px;max-height:calc(100dvh - 292px)}
+ #hint{bottom:66px;left:0;right:0;font-size:9px;background:transparent}
+}
+@media(max-height:550px) and (max-width:900px){
+ header{top:8px;left:14px}h1{font-size:16px;line-height:1.05;margin:4px 0}.eyebrow{font-size:8px}header p{font-size:8px}header .credit{display:none}
+ #viewport{inset:70px 0 64px}#right{top:9px;width:170px;max-height:calc(100dvh - 80px)}
+ #left{top:12px;bottom:70px;max-height:none}#hint{display:none}.mobile-toggle,body.controls-open .mobile-toggle{bottom:70px;left:auto;right:12px}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div id="viewport" role="img" aria-label="Interactive 3D water filtration prototype with seven filter layers, a collection jug, wooden braced stand, front faucet, and square base"></div>
+<header><div class="eyebrow">STEM 12 · Filtration study</div><h1>Panlinis ng Tubig<br>sa San Jose del Monte</h1><p>Malinis na tubig para kay Matt</p><p class="credit">Pogi si Matt Gumaod · STEM 12-Architecture</p></header>
+<aside id="left" class="panel" aria-label="Prototype controls"><h2>Kontrol ng Prototype</h2><p class="sub">Tuklasin ang bawat bahagi ng filter.</p>
+<button id="flow" class="control primary" aria-pressed="false" disabled>Simulan ang Daloy ng Tubig</button><button id="lid" class="control" aria-pressed="false" disabled>Buksan ang Takip</button><button id="tap" class="control" aria-pressed="false" disabled>Buksan ang Gripo</button><button id="cut" class="control active" aria-pressed="true" disabled>Cutaway View: ON</button>
+<h3>Mga layer · itaas pababa</h3>
+<label class="material"><span class="swatch gravel"></span><span>01 · Gravel</span><input type="checkbox" data-layer="0" checked disabled></label>
+<label class="material"><span class="swatch sand"></span><span>02 · Fine Sand</span><input type="checkbox" data-layer="1" checked disabled></label>
+<label class="material"><span class="swatch corn"></span><span>03 · Corn Cobs</span><input type="checkbox" data-layer="2" checked disabled></label>
+<label class="material"><span class="swatch husk"></span><span>04 · Coconut Husk</span><input type="checkbox" data-layer="3" checked disabled></label>
+<label class="material"><span class="swatch gravel"></span><span>05 · Gravel</span><input type="checkbox" data-layer="4" checked disabled></label>
+<label class="material"><span class="swatch sand"></span><span>06 · Fine Sand</span><input type="checkbox" data-layer="5" checked disabled></label>
+<label class="material"><span class="swatch paper"></span><span>07 · Filter Paper</span><input type="checkbox" data-layer="6" checked disabled></label>
+<div class="status"><div class="statusline"><span>Daloy ng tubig</span><strong id="sflow">OFF</strong></div><div class="statusline"><span>Gripo / Takip</span><strong id="shardware">CLOSED / CLOSED</strong></div><div class="statusline"><span>Collection tank</span><strong id="level">20%</strong></div><div class="meter" role="progressbar" aria-label="Tank level" aria-valuemin="0" aria-valuemax="100" aria-valuenow="20" id="tankmeter"><div id="fill"></div></div><div class="statusline"><span>Collection bucket</span><strong id="sbucket">0%</strong></div><div class="meter bucket" role="progressbar" aria-label="Bucket level" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="bucketmeter"><div id="bucketfill"></div></div><button id="empty" class="control" disabled>Alisan ng Laman ang Bucket</button></div>
+<p class="note">3D concept prototype lamang. Ang galaw at antas ng tubig ay visual simulation.</p></aside>
+<details id="right" class="panel" open><summary>Mga Filter Media</summary><p><b>Ayos mula sa drawing</b><br>Gravel → Fine sand → Corn cobs → Coconut husk → Gravel → Fine sand → Filter paper.</p><p><b>Gravel</b><br>Humaharang sa malalaking debris.</p><p><b>Coconut Husk</b><br>Sinusuri sa posibleng pag-reduce ng phosphate at nitrate sa tubig.</p><p><b>Corn Cobs</b><br>Sinusuri sa posibleng pag-reduce ng phosphate at nitrate sa tubig.</p><p><b>Fine Sand</b><br>Humaharang sa maliliit na particles.</p><p><b>Filter Paper</b><br>Karagdagang harang para sa ilang particles.</p><hr><b>Layunin ng Pananaliksik</b><p>Suriin ang coconut husk at corn cobs bilang filtration media at sukatin ang pagbabago sa nitrate, phosphate, at pH ng tubig.</p><p class="note">Kailangan ng laboratory testing upang masukat ang tunay na resulta.</p><span class="badge">Natural materials · 3D study</span></details>
+<button class="mobile-toggle" id="mobile" aria-expanded="false" aria-controls="left">Kontrol ng Prototype</button>
+<div id="viewtools" role="group" aria-label="View controls"><button class="viewbutton" id="front" disabled>Harap</button><button class="viewbutton" id="reset" disabled>3D view</button><button class="viewbutton active" id="labels" aria-pressed="true" disabled>Labels</button><button class="viewbutton" id="overview" disabled>Buong lugar</button></div>
+<div id="hint">Drag para umikot &nbsp; · &nbsp; Scroll / pinch para mag-zoom</div><div id="live" role="status">Handa ang prototype</div>
+<div id="load" role="status"><strong>Inihahanda ang 3D prototype</strong><span>Loading natural materials and lighting…</span><small>Three.js loads from jsDelivr. Internet connection required.</small></div>
+<noscript>Enable JavaScript to view the interactive 3D prototype.</noscript>
+<!-- Three.js is pinned to the original revision. All surface textures are generated locally. -->
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
+<script>
+const loadingTimer=setTimeout(()=>{const e=document.querySelector('#load span');if(e)e.textContent='Still loading. Check your internet connection and allow cdn.jsdelivr.net, then reload.'},20000);
+document.getElementById('mobile').onclick=()=>{const opened=document.body.classList.toggle('controls-open');document.getElementById('mobile').setAttribute('aria-expanded',opened);document.getElementById('mobile').textContent=opened?'Isara ang Kontrol':'Kontrol ng Prototype'};
+if(matchMedia('(max-width:900px)').matches)document.getElementById('right').open=false;
+</script>
+<script type="module">
+const $=id=>document.getElementById(id);
+function showError(title,message){
+ clearTimeout(loadingTimer);$('load').classList.remove('hidden');
+ document.querySelector('#load strong').textContent=title;
+ document.querySelector('#load span').textContent=message;
+}
+try {
+const THREE=await import('three');
+const [{OrbitControls},{RoundedBoxGeometry},{RoomEnvironment}]=await Promise.all([
+ import('three/addons/controls/OrbitControls.js'),
+ import('three/addons/geometries/RoundedBoxGeometry.js'),
+ import('three/addons/environments/RoomEnvironment.js')
+]);
+const mobile=matchMedia('(max-width:900px)').matches;
+const reducedMotion=matchMedia('(prefers-reduced-motion:reduce)').matches;
+const scene=new THREE.Scene();
+scene.background=new THREE.Color('#e4ece5');
+scene.fog=new THREE.Fog('#e4ece5',25,65);
+const viewport=$('viewport');
+const camera=new THREE.PerspectiveCamera(38,viewport.clientWidth/viewport.clientHeight,.1,150);
+const renderer=new THREE.WebGLRenderer({antialias:true,alpha:false,powerPreference:'high-performance'});
+renderer.setPixelRatio(Math.min(devicePixelRatio,mobile?1.5:2));
+renderer.setSize(viewport.clientWidth,viewport.clientHeight);
+renderer.shadowMap.enabled=true;
+renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.outputColorSpace=THREE.SRGBColorSpace;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure=.96;
+renderer.domElement.id='scene';
+$('viewport').appendChild(renderer.domElement);
+const pmrem=new THREE.PMREMGenerator(renderer);
+const studio=new RoomEnvironment();
+const environment=pmrem.fromScene(studio,.055);
+scene.environment=environment.texture;
+scene.environmentIntensity=.5;
+studio.dispose();pmrem.dispose();
+
+const controls=new OrbitControls(camera,renderer.domElement);
+controls.enableDamping=!reducedMotion;
+controls.dampingFactor=.07;
+controls.minDistance=6;controls.maxDistance=32;
+controls.maxPolarAngle=Math.PI*.48;
+controls.enablePan=false;
+function fitView(front=false){
+ const narrow=innerWidth<=900,aspect=viewport.clientWidth/viewport.clientHeight;
+ const distance=Math.max((narrow?8.4:8.6)/(2*Math.tan(THREE.MathUtils.degToRad(19))),5.8/(2*Math.tan(THREE.MathUtils.degToRad(19))*aspect));
+ const direction=new THREE.Vector3(front?0:.36,front?.055:.22,1).normalize();
+ controls.target.set(0,3.12,.12);camera.position.copy(controls.target).addScaledVector(direction,distance*(narrow?1:1.12));controls.update();
+}
+function home(){fitView(false)}
+home();
+scene.add(new THREE.HemisphereLight('#e8f5ff','#737754',1.35));
+const sun=new THREE.DirectionalLight('#fff1d5',2.7);
+sun.position.set(-5,12,7);sun.castShadow=true;
+sun.shadow.mapSize.set(mobile?1024:2048,mobile?1024:2048);
+Object.assign(sun.shadow.camera,{left:-14,right:14,top:16,bottom:-14,near:1,far:45});
+sun.shadow.normalBias=.025;sun.shadow.bias=-.0002;sun.shadow.radius=4;
+sun.target.position.set(0,1,-3);scene.add(sun,sun.target);
+const fillLight=new THREE.DirectionalLight('#d6e9ff',.65);fillLight.position.set(7,5,-5);scene.add(fillLight);
+
+// Seeded variation keeps the prototype identical after every reload.
+let seed=7319;
+function rand(){seed=(Math.imul(1664525,seed)+1013904223)>>>0;return seed/4294967296}
+const range=(a,b)=>a+rand()*(b-a);
+function texture(kind,size=256){
+ const c=document.createElement('canvas');c.width=c.height=size;const x=c.getContext('2d');
+ const palettes={concrete:[192,192,176],sand:[213,191,148],grass:[95,119,72],wood:[120,88,56],husk:[123,83,43],corn:[193,152,88],paper:[239,237,216],court:[71,111,91]};
+ const base=palettes[kind]||palettes.concrete,im=x.createImageData(size,size);
+ for(let i=0;i<im.data.length;i+=4){let n=(rand()-.5)*(kind==='sand'?48:30);for(let k=0;k<3;k++)im.data[i+k]=base[k]+n;im.data[i+3]=255}x.putImageData(im,0,0);
+ if(['wood','husk'].includes(kind)){for(let i=0;i<700;i++){const y=rand()*size;x.strokeStyle=rand()>.5?'#39241738':'#e7c58c42';x.lineWidth=range(.3,1.2);x.beginPath();x.moveTo(0,y);x.bezierCurveTo(size*.3,y+range(-8,8),size*.7,y+range(-8,8),size,y+range(-3,3));x.stroke()}}
+ if(kind==='corn'){for(let y=0;y<size;y+=15)for(let xx=0;xx<size;xx+=14){x.fillStyle='#74532677';x.beginPath();x.ellipse(xx+(y%2)*4,y,4,5,0,0,Math.PI*2);x.fill();x.strokeStyle='#efce8a';x.stroke()}}
+ if(kind==='grass'){for(let i=0;i<7000;i++){const a=rand()*size,b=rand()*size;x.strokeStyle=rand()>.5?'#43593b44':'#c0c59566';x.beginPath();x.moveTo(a,b);x.lineTo(a+range(-2,2),b-range(2,7));x.stroke()}}
+ const map=new THREE.CanvasTexture(c);map.colorSpace=THREE.SRGBColorSpace;map.wrapS=map.wrapT=THREE.RepeatWrapping;map.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());
+ const bump=new THREE.CanvasTexture(c);bump.wrapS=bump.wrapT=THREE.RepeatWrapping;
+ return {map,bumpMap:bump};
+}
+function mat(color,extra={}){return new THREE.MeshStandardMaterial({color,roughness:.72,metalness:0,...extra})}
+function textured(kind,extra={}){return mat('#ffffff',{...texture(kind),bumpScale:.025,...extra})}
+const concrete=textured('concrete',{roughness:.94,bumpScale:.035});
+const teal=new THREE.MeshPhysicalMaterial({color:'#356c67',roughness:.34,metalness:.2,clearcoat:.45,clearcoatRoughness:.3});
+const dark=mat('#34433c',{roughness:.6});
+const rubber=mat('#333d36',{roughness:.93});
+const stainless=mat('#a8b1a7',{metalness:.85,roughness:.28});
+const pvc=mat('#e4e8da',{roughness:.38});
+const glass=new THREE.MeshPhysicalMaterial({color:'#d9eee6',roughness:.12,metalness:0,transparent:true,opacity:.19,side:THREE.DoubleSide,depthWrite:false,clearcoat:1,clearcoatRoughness:.08,envMapIntensity:1.25});
+const water=new THREE.MeshPhysicalMaterial({color:'#6bafa6',roughness:.12,metalness:.06,transparent:true,opacity:.58,depthWrite:false,clearcoat:1,clearcoatRoughness:.07,envMapIntensity:1.1});
+function mesh(g,m,pos=[0,0,0],parent=scene){const o=new THREE.Mesh(g,m);o.position.set(...pos);o.castShadow=!m.transparent;o.receiveShadow=true;parent.add(o);return o}
+function box(w,h,d,m,x,y,z,parent=scene,r=0){return mesh(r?new RoundedBoxGeometry(w,h,d,2,r):new THREE.BoxGeometry(w,h,d),m,[x,y,z],parent)}
+function cyl(r,h,m,x,y,z,parent=scene,rt=r){return mesh(new THREE.CylinderGeometry(rt,r,h,64),m,[x,y,z],parent)}
+function ring(r,t,m,x,y,z,parent=scene){const o=mesh(new THREE.TorusGeometry(r,t,10,80),m,[x,y,z],parent);o.rotation.x=Math.PI/2;return o}
+function lineBetween(a,b,r,m,parent=scene){const av=new THREE.Vector3(...a),bv=new THREE.Vector3(...b),d=bv.clone().sub(av);const o=mesh(new THREE.CylinderGeometry(r,r,d.length(),10),m,av.clone().add(bv).multiplyScalar(.5).toArray(),parent);o.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),d.normalize());return o}
+function pipe(points,r=.07,m=pvc,parent=scene){return mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points.map(p=>new THREE.Vector3(...p))),48,r,12,false),m,[0,0,0],parent)}
+const dummy=new THREE.Object3D();
+function instances(geo,material,count,place,parent=scene){const batch=new THREE.InstancedMesh(geo,material,count);for(let i=0;i<count;i++){dummy.position.set(0,0,0);dummy.rotation.set(0,0,0);dummy.scale.set(1,1,1);const color=place(dummy,i);dummy.updateMatrix();batch.setMatrixAt(i,dummy.matrix);if(color)batch.setColorAt(i,new THREE.Color(color))}batch.castShadow=true;batch.receiveShadow=true;batch.instanceMatrix.needsUpdate=true;parent.add(batch);return batch}
+
+// Outdoor setting: grass, riverbank, a home, and the original badminton court.
+const grass=textured('grass',{roughness:1,bumpScale:.012});grass.map.repeat.set(30,30);grass.bumpMap.repeat.set(30,30);
+const ground=mesh(new THREE.PlaneGeometry(120,120),grass,[0,-.16,0]);ground.rotation.x=-Math.PI/2;
+const earth=textured('sand',{color:'#beb99b'});
+box(29,.08,4.0,earth,0,-.13,-5.7);
+const riverGeo=new THREE.PlaneGeometry(28,2.8,100,18);riverGeo.rotateX(-Math.PI/2);
+const river=mesh(riverGeo,new THREE.MeshPhysicalMaterial({color:'#578e83',roughness:.22,metalness:.25,clearcoat:1,clearcoatRoughness:.1}),[0,-.065,-5.7]);
+river.castShadow=false;
+const stoneColors=['#8b8c7c','#a4a18b','#73796d','#b6ad92'];
+instances(new THREE.IcosahedronGeometry(1,1),mat('#ffffff',{roughness:1}),180,(d,i)=>{const side=i%2?1:-1;d.position.set(range(-14,14),range(-.06,.01),-5.7+side*range(1.45,1.93));d.scale.set(range(.12,.3),range(.07,.16),range(.1,.25));d.rotation.set(rand()*3,rand()*3,rand()*3);return stoneColors[i%4]});
+// Flat, worn stepping stones lead toward the house.
+for(let i=0;i<5;i++)box(.72,.06,.42,concrete,-3.15+i*.35,-.10,-2.4-i*.48,scene,.035);
+const house=new THREE.Group();house.position.set(-4.8,-.14,-9.2);house.rotation.y=.15;scene.add(house);
+const wall=textured('concrete',{color:'#f6e6c8',roughness:.95,bumpScale:.02});
+box(3.6,2.3,2.7,wall,0,1.15,0,house,.04);box(4,.18,3.2,concrete,0,.03,.05,house,.04);
+const wood=textured('wood',{roughness:.82});
+const roofMat=mat('#746b57',{metalness:.45,roughness:.66});
+for(const s of [-1,1]){const roof=box(2.12,.08,3.3,roofMat,s*.94,2.62,0,house);roof.rotation.z=-s*.36;for(let z=-1.6;z<=1.6;z+=.14)lineBetween([s*.02,2.98,z],[s*1.98,2.25,z],.015,roofMat,house)}
+box(.68,1.6,.07,wood,0,.83,1.39,house,.02);mesh(new THREE.SphereGeometry(.045,12,8),stainless,[.23,.85,1.45],house);
+for(const x of [-1.12,1.12]){box(.83,.83,.08,wood,x,1.45,1.4,house);box(.69,.69,.03,mat('#697f77',{roughness:.18,metalness:.5}),x,1.45,1.45,house);box(.035,.7,.04,pvc,x,1.45,1.48,house);box(.7,.035,.04,pvc,x,1.45,1.48,house)}
+box(1.25,.14,.55,concrete,0,-.02,1.7,house,.02);
+
+const court=new THREE.Group();court.position.set(6.0,-.10,-12);scene.add(court);
+const courtMat=textured('court',{roughness:.95});courtMat.map.repeat.set(4,6);
+box(6,.08,11.8,courtMat,0,0,0,court);
+const stripe=mat('#dfdfca');
+function courtLine(x1,z1,x2,z2){const len=Math.hypot(x2-x1,z2-z1);const s=box(.035,.012,len,stripe,(x1+x2)/2,.05,(z1+z2)/2,court);s.rotation.y=Math.atan2(x2-x1,z2-z1)}
+for(const x of [-2.75,-2.35,2.35,2.75])courtLine(x,-5.6,x,5.6);
+for(const z of [-5.6,-4.8,-1.8,1.8,4.8,5.6])courtLine(-2.75,z,2.75,z);
+courtLine(0,-5.6,0,-1.8);courtLine(0,1.8,0,5.6);
+for(const x of [-2.88,2.88])cyl(.035,1.5,stainless,x,.79,0,court);
+lineBetween([-2.88,1.54,0],[2.88,1.54,0],.022,pvc,court);
+const netPoints=[];for(let x=-2.85;x<=2.85;x+=.15)netPoints.push(new THREE.Vector3(x,.82,0),new THREE.Vector3(x,1.5,0));for(let y=.82;y<=1.5;y+=.12)netPoints.push(new THREE.Vector3(-2.85,y,0),new THREE.Vector3(2.85,y,0));
+court.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(netPoints),new THREE.LineBasicMaterial({color:'#3d4c3c',transparent:true,opacity:.65})));
+
+// Asymmetric, overlapping foliage clusters with individual leaf silhouettes.
+const leafCanvas=document.createElement('canvas');leafCanvas.width=leafCanvas.height=64;
+const leafCtx=leafCanvas.getContext('2d');leafCtx.fillStyle='#fff';leafCtx.beginPath();leafCtx.ellipse(32,32,14,29,.3,0,Math.PI*2);leafCtx.fill();
+const leafTexture=new THREE.CanvasTexture(leafCanvas);
+const leafMat=mat('#ffffff',{map:leafTexture,alphaTest:.5,side:THREE.DoubleSide,roughness:.95});
+const bark=textured('wood',{color:'#94856c',roughness:1});
+const leafColors=['#526e3c','#637d42','#7d8d49','#405c38','#8a995c'];
+for(const [tx,tz,size] of [[-8,-6,1.15],[-10,-13,1.3],[-3,-17,1.1],[13,-7,1.2],[13,-17,1.4],[1,-23,1.6],[-12,-22,1.4]]){
+ const tree=new THREE.Group();tree.position.set(tx,-.16,tz);scene.add(tree);
+ cyl(.16,2.7*size,bark,0,1.35*size,0,tree,.08);
+ for(let i=0;i<6;i++){const a=i*Math.PI*.34;lineBetween([0,1.4*size,0],[Math.sin(a)*.75*size,2.7*size+rand()*.4,Math.cos(a)*.75*size],.045,bark,tree)}
+ instances(new THREE.PlaneGeometry(1,1),leafMat,mobile?180:320,(d,i)=>{const a=rand()*Math.PI*2,r=Math.cbrt(rand())*1.35*size,u=range(-1,1),s=Math.sqrt(1-u*u);d.position.set(Math.cos(a)*r*s,3*size+u*r*.85,Math.sin(a)*r*s);d.rotation.set(rand()*Math.PI,rand()*Math.PI,rand()*Math.PI);d.scale.set(range(.3,.7)*size,range(.4,.8)*size,1);return leafColors[i%5]},tree);
+}
+const grassBlade=new THREE.BufferGeometry();grassBlade.setAttribute('position',new THREE.Float32BufferAttribute([-.012,0,0,.012,0,0,.025,.16,0],3));grassBlade.computeVertexNormals();
+instances(grassBlade,mat('#78894e',{side:THREE.DoubleSide,roughness:1}),mobile?500:1200,(d,i)=>{const a=rand()*Math.PI*2,r=range(3.3,15);d.position.set(Math.cos(a)*r,-.14,Math.sin(a)*r);if(d.position.z<-3.5)d.position.x-=10;d.rotation.y=rand()*Math.PI;d.rotation.z=range(-.3,.3);d.scale.set(1,range(.5,1.5),1);return leafColors[i%5]});
+
+// Reference sketch: rounded filter vessel above a collection jug in a wooden stand.
+// These proportions follow the drawing; no physical measurements were supplied.
+const BASE_SIZE=4.6,BASE_TOP=.24;
+const base=box(BASE_SIZE,.34,BASE_SIZE,concrete,.25,.07,.2,scene,.055);
+base.name='Square concrete base';
+box(4.5,.045,4.5,mat('#b5b8a6',{roughness:.94}),.25,-.12,.2,scene,.025);
+
+// Timber grain follows the long axis of each post and brace.
+const timber=textured('wood',{color:'#e5c397',roughness:.83,bumpScale:.018});
+for(const tex of [timber.map,timber.bumpMap]){tex.center.set(.5,.5);tex.rotation=Math.PI/2;tex.repeat.set(1,2)}
+const stand=new THREE.Group();stand.name='Wooden stand with diagonal braces';scene.add(stand);
+function beam(a,b,width=.15,depth=.15){
+ const av=new THREE.Vector3(...a),bv=new THREE.Vector3(...b),delta=bv.clone().sub(av);
+ const o=box(width,delta.length(),depth,timber,0,0,0,stand,.012);
+ o.position.copy(av.add(bv).multiplyScalar(.5));o.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),delta.normalize());return o;
+}
+for(const x of [-1.3,1.3])for(const z of [-1.02,1.02])beam([x,BASE_TOP,z],[x,3.2,z],.19,.19);
+// Lower shelf and rails carry the collection jug.
+for(const y of [.74,3.05]){
+ for(const z of [-1.02,1.02])beam([-1.3,y,z],[1.3,y,z],.16,.16);
+ for(const x of [-1.3,1.3])beam([x,y,-1.02],[x,y,1.02],.16,.16);
+}
+for(let z=-.9;z<=.91;z+=.30)box(2.42,.085,.285,timber,0,.83,z,stand,.008);
+// Diagonal braces on both sides and across the back; front remains open for the faucet.
+for(const x of [-1.3,1.3]){
+ beam([x,.78,-.94],[x,2.99,.94],.115,.115);
+ beam([x,2.99,-.94],[x,.78,.94],.115,.115);
+}
+beam([-1.23,.82,-1.02],[1.23,3.0,-1.02],.12,.12);
+// Four tabletop boards form an opening for the jug neck and drain.
+box(1.14,.15,2.45,timber,-.88,3.155,0,stand,.018);
+box(1.14,.15,2.45,timber,.88,3.155,0,stand,.018);
+box(.62,.15,.94,timber,0,3.155,-.755,stand,.018);
+box(.62,.15,.94,timber,0,3.155,.755,stand,.018);
+for(const x of [-1.3,1.3])for(const y of [.75,3.05]){
+ const bolt=cyl(.027,.012,stainless,x,y,1.121,stand);bolt.rotation.x=Math.PI/2;
+}
+
+let running=false,tapOpen=false,lidOpen=false,cutaway=true,level=.2,bucketLevel=0;
+// Radial profile gives the upper vessel a rounded base, straight belly, and tapered shoulder.
+const profile=[[.18,3.23],[.65,3.25],[.91,3.34],[1.035,3.52],[1.06,4.4],[1.045,5.12],[.98,5.4],[.83,5.66],[.58,5.88],[.57,5.94]];
+const profileCurve=new THREE.CatmullRomCurve3(profile.map(([r,y])=>new THREE.Vector3(r,y,0)));
+const profilePoints=profileCurve.getPoints(90).map(p=>new THREE.Vector2(p.x,p.y));
+function vesselGeometry(cut){return new THREE.LatheGeometry(profilePoints,96,cut?Math.PI*.33:0,cut?Math.PI*1.35:Math.PI*2)}
+const filterShell=mesh(vesselGeometry(cutaway),glass.clone());filterShell.renderOrder=4;
+filterShell.name='Rounded upper filter container';
+ring(.57,.034,teal,0,5.94,0);
+ring(.9,.025,pvc,0,3.35,0);
+// Molded horizontal ribs follow the outline of the vessel.
+const molded=glass.clone();molded.opacity=.36;
+for(const y of [3.6,4.08,4.58,5.1])ring(1.052,.018,molded,0,y,0);
+
+// Lower collection jug, rounded rectangular body with a narrowing shoulder and neck.
+const jugProfiles=[
+ [.88,.84,.62],[.94,.94,.72],[1.05,.98,.76],[2.3,.98,.76],
+ [2.48,.93,.72],[2.61,.78,.6],[2.71,.47,.38],[2.79,.23,.23],[3.13,.23,.23]
+];
+function jugGeometry(cut){
+ const points=[],uv=[],indices=[],segments=80;
+ const start=cut?Math.PI*.33:0,length=cut?Math.PI*1.35:Math.PI*2;
+ for(let j=0;j<jugProfiles.length;j++){
+  const [y,w,d]=jugProfiles[j],power=j<7?.42:1;
+  for(let i=0;i<=segments;i++){
+   const a=start+length*i/segments,s=Math.sin(a),c=Math.cos(a);
+   points.push(Math.sign(s)*Math.pow(Math.abs(s),power)*w,y,Math.sign(c)*Math.pow(Math.abs(c),power)*d);uv.push(i/segments,j/(jugProfiles.length-1));
+   if(j>0&&i<segments){const p=j*(segments+1)+i,q=p-segments-1;indices.push(q,q+1,p,p,q+1,p+1)}
+  }
+ }
+ const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(points,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));g.setIndex(indices);g.computeVertexNormals();return g;
+}
+const jugPlastic=glass.clone();jugPlastic.color.set('#b5d2cb');jugPlastic.roughness=.3;
+const tankShell=mesh(jugGeometry(false),jugPlastic);tankShell.material.opacity=.44;tankShell.renderOrder=4;
+// Molded edge seams make the jug silhouette clear even in the transparent view.
+for(const side of [-1,1])pipe([[side*.84,.94,.62],[side*.96,1.12,.72],[side*.96,2.30,.72],[side*.86,2.51,.66],[side*.25,2.8,.24],[side*.23,3.08,.23]],.012,pvc);
+box(1.72,.04,1.28,pvc,0,.895,0,scene,.08);
+ring(.234,.025,teal,0,3.08,0);
+// Drain follows the center opening in the tabletop into the lower jug.
+const drainMaterial=glass.clone();drainMaterial.opacity=.35;
+const drain=mesh(new THREE.CylinderGeometry(.13,.13,.34,40,1,true),drainMaterial,[0,3.12,0]);
+cyl(.16,.045,pvc,0,3.26,0);cyl(.16,.045,pvc,0,2.98,0);
+const drainFlow=mesh(new THREE.CylinderGeometry(.045,.045,.4,12),water,[0,3.08,0]);drainFlow.visible=false;
+// Round front inspection/outlet port shown near the bottom of the upper vessel.
+const port=mesh(new THREE.TorusGeometry(.12,.025,12,40),pvc,[0,3.48,1.037]);
+mesh(new THREE.CircleGeometry(.093,40),glass.clone(),[0,3.48,1.045]);
+
+const tankWater=box(1.76,1,1.29,water,0,1.1,0,scene,.055);tankWater.renderOrder=2;
+const surfaceMat=new THREE.MeshPhysicalMaterial({color:'#91c3b5',transparent:true,opacity:.65,roughness:.13,metalness:.08,clearcoat:1,side:THREE.DoubleSide,depthWrite:false});
+const tankSurface=mesh(new THREE.PlaneGeometry(1.7,1.24),surfaceMat,[0,1.2,0]);tankSurface.rotation.x=-Math.PI/2;tankSurface.renderOrder=3;
+
+// Seven layers in the exact top-to-bottom order labeled on the sketch.
+const definitions=[
+ {name:'01  GRAVEL',y:5.46,h:.29,r:.85,kind:'gravel'},
+ {name:'02  FINE SAND',y:5.16,h:.25,r:.99,kind:'sand'},
+ {name:'03  CORN COBS',y:4.82,h:.40,r:1.0,kind:'corn'},
+ {name:'04  COCONUT HUSK',y:4.43,h:.34,r:1.0,kind:'husk'},
+ {name:'05  GRAVEL',y:4.09,h:.30,r:.99,kind:'gravel'},
+ {name:'06  FINE SAND',y:3.79,h:.26,r:.98,kind:'sand'},
+ {name:'07  FILTER PAPER',y:3.61,h:.035,r:.97,kind:'paper'}
+];
+const layers=[];
+function scatter(d,def,top=false){const a=rand()*Math.PI*2,r=Math.sqrt(rand())*(def.r-.07);d.position.set(Math.cos(a)*r,def.y+(top?def.h/2:range(-def.h*.35,def.h*.35)),Math.sin(a)*r);d.rotation.set(rand()*3,rand()*3,rand()*3)}
+definitions.forEach(def=>{
+ const group=new THREE.Group();group.name=def.name;layers.push(group);scene.add(group);
+ if(def.kind==='gravel')instances(new THREE.IcosahedronGeometry(1,1),mat('#ffffff',{roughness:.95}),mobile?380:650,(d,i)=>{scatter(d,def);d.scale.set(range(.045,.082),range(.035,.065),range(.045,.08));return stoneColors[i%4]},group);
+ if(def.kind==='sand'){
+  cyl(def.r,def.h,textured('sand',{roughness:1,bumpScale:.009}),0,def.y,0,group);
+  instances(new THREE.IcosahedronGeometry(.012,0),mat('#dfcca3',{roughness:1}),mobile?130:260,d=>{scatter(d,def,true)},group);
+ }
+ if(def.kind==='corn')instances(new THREE.CylinderGeometry(.04,.05,.17,9),textured('corn',{roughness:.96,bumpScale:.035}),mobile?300:520,d=>{scatter(d,def);d.scale.setScalar(range(.8,1.25))},group);
+ if(def.kind==='husk'){
+  const fiber=new THREE.TubeGeometry(new THREE.QuadraticBezierCurve3(new THREE.Vector3(-.13,0,0),new THREE.Vector3(0,.03,.02),new THREE.Vector3(.13,0,0)),5,.006,3,false);
+  instances(fiber,mat('#ffffff',{roughness:1}),mobile?700:1250,(d,i)=>{scatter(d,def);return ['#735032','#9e7447','#bc915f','#64472f'][i%4]},group);
+  instances(new THREE.BoxGeometry(.12,.018,.05),textured('husk'),170,d=>{scatter(d,def)},group);
+ }
+ if(def.kind==='paper')cyl(def.r,def.h,textured('paper',{roughness:1,bumpScale:.004}),0,def.y,0,group);
+});
+
+// Removable hinged cap preserves the previous lid control; opening reveals the small neck.
+const lidPivot=new THREE.Group();lidPivot.position.set(0,6.0,-.54);scene.add(lidPivot);
+cyl(.60,.075,teal,0,0,.54,lidPivot);cyl(.55,.012,rubber,0,-.045,.54,lidPivot);
+pipe([[-.15,.04,.54],[-.15,.14,.54],[.15,.14,.54],[.15,.04,.54]],.021,stainless,lidPivot);
+box(.18,.07,.12,stainless,0,0,0,lidPivot,.012);
+
+// Faucet is centered on the FRONT of the lower jug, as in the drawing.
+pipe([[0,1.35,.70],[0,1.35,.88],[0,1.35,1.06]],.075,pvc);
+const valve=cyl(.10,.25,stainless,0,1.35,1.08);valve.rotation.x=Math.PI/2;
+pipe([[0,1.35,1.18],[0,1.42,1.36],[0,1.42,1.56],[0,1.32,1.60]],.048,stainless);
+cyl(.059,.075,stainless,0,1.31,1.60);ring(.044,.012,dark,0,1.273,1.60);
+cyl(.035,.17,stainless,0,1.47,1.08);
+const handle=new THREE.Group();handle.position.set(0,1.57,1.08);scene.add(handle);
+box(.29,.05,.07,teal,0,0,0,handle,.018);
+
+// Collection bucket retained from the original scene, below the front faucet.
+const bucketX=0,bucketZ=1.60,bucketY=BASE_TOP+.012,bucketHeight=.66,bucketTop=.43,bucketBottom=.31;
+const bucketMat=new THREE.MeshPhysicalMaterial({color:'#9bb7aa',roughness:.32,transparent:true,opacity:.38,depthWrite:false,side:THREE.DoubleSide,clearcoat:.5});
+const bucketShell=mesh(new THREE.CylinderGeometry(bucketTop,bucketBottom,bucketHeight,64,1,true),bucketMat,[bucketX,bucketY+bucketHeight/2,bucketZ]);bucketShell.renderOrder=4;
+cyl(bucketBottom,.025,teal,bucketX,bucketY+.013,bucketZ);ring(bucketTop,.025,teal,bucketX,bucketY+bucketHeight,bucketZ);
+const bucketHandle=mesh(new THREE.TorusGeometry(.39,.012,8,48,Math.PI),stainless,[bucketX,bucketY+bucketHeight-.03,bucketZ]);bucketHandle.rotation.x=-.9;
+const bucketWater=mesh(new THREE.CylinderGeometry(1,1,1,64),water.clone(),[bucketX,bucketY+.05,bucketZ]);bucketWater.renderOrder=2;
+const bucketWaterVertices=bucketWater.geometry.attributes.position,bucketWaterUnit=bucketWaterVertices.array.slice();
+const rippleMaterial=mat('#c9e5d7',{transparent:true,opacity:.5,depthWrite:false,roughness:.2});
+const ripples=Array.from({length:3},()=>{const r=ring(.14,.005,rippleMaterial.clone(),bucketX,.3,bucketZ);r.castShadow=false;r.renderOrder=3;return r});
+const faucetStream=mesh(new THREE.CylinderGeometry(.018,.025,1,12),water.clone(),[bucketX,.9,bucketZ]);faucetStream.material.opacity=.77;faucetStream.renderOrder=3;
+const droplets=instances(new THREE.SphereGeometry(.018,6,5),water,38,d=>{d.position.y=-5;d.scale.set(1,1.5,1)});droplets.castShadow=false;
+
+function textTexture(text){const c=document.createElement('canvas');c.width=640;c.height=90;const ctx=c.getContext('2d');ctx.fillStyle='#fffffff2';ctx.beginPath();ctx.roundRect(0,0,640,90,13);ctx.fill();ctx.fillStyle='#385544';ctx.font='600 38px Arial';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(text,320,45,610);const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return t}
+const labelGroup=new THREE.Group();labelGroup.visible=!mobile;scene.add(labelGroup);
+function label(text,point,position,width=1.85){
+ const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:textTexture(text),depthTest:false,transparent:true,toneMapped:false}));sprite.position.set(...position);sprite.scale.set(width,width*90/640,1);sprite.renderOrder=10;labelGroup.add(sprite);
+ labelGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(...point),new THREE.Vector3(position[0]+width*.46,position[1],position[2])]),new THREE.LineBasicMaterial({color:'#607c66',transparent:true,opacity:.6})));
+}
+definitions.forEach(d=>label(d.name,[-d.r,d.y,.13],[-2.13,d.kind==='paper'?d.y-.16:d.y,.13],1.96));
+label('COLLECTION JUG',[-.98,1.98,.2],[-2.2,1.98,.2],1.85);
+label('KAHOY NA BRACE',[-1.3,1.35,.2],[-2.22,1.30,.2],1.88);
+
+let time=0,last=performance.now(),lastUI=-1;
+// Demonstration volumes and rates only; no water-quality calculation is implied.
+const TANK_CAPACITY=12,BUCKET_CAPACITY=3,INLET_RATE=.46,OUTLET_RATE=.24;
+function updateUI(){
+ const tp=Math.round(level*100),bp=Math.round(bucketLevel*100);
+ $('sflow').textContent=running?'ON':'OFF';$('shardware').textContent=(tapOpen?'OPEN':'CLOSED')+' / '+(lidOpen?'OPEN':'CLOSED');
+ $('level').textContent=tp+'%';$('sbucket').textContent=bp+'%';$('fill').style.width=tp+'%';$('bucketfill').style.width=bp+'%';$('tankmeter').setAttribute('aria-valuenow',tp);$('bucketmeter').setAttribute('aria-valuenow',bp);
+ $('flow').textContent=running?'Itigil ang Daloy ng Tubig':'Simulan ang Daloy ng Tubig';$('lid').textContent=lidOpen?'Isara ang Takip':'Buksan ang Takip';$('tap').textContent=tapOpen?'Isara ang Gripo':'Buksan ang Gripo';$('cut').textContent='Cutaway View: '+(cutaway?'ON':'OFF');
+ for(const [id,state] of [['flow',running],['lid',lidOpen],['tap',tapOpen],['cut',cutaway],['labels',labelGroup.visible]]){$(id).classList.toggle('active',state);$(id).setAttribute('aria-pressed',state)}
+ $('live').textContent=bucketLevel>=.999?'Puno ang bucket · alisan ng laman':running&&level>=.999?'Puno ang collection jug':running?'Dumadaloy ang tubig sa filter':tapOpen&&level<=.001?'Walang laman ang jug':'Handa ang prototype';
+}
+$('flow').onclick=()=>{running=!running;updateUI()};$('lid').onclick=()=>{lidOpen=!lidOpen;updateUI()};$('tap').onclick=()=>{tapOpen=!tapOpen;updateUI()};$('empty').onclick=()=>{bucketLevel=0;updateUI()};
+$('cut').onclick=()=>{cutaway=!cutaway;filterShell.geometry.dispose();filterShell.geometry=vesselGeometry(cutaway);tankShell.geometry.dispose();tankShell.geometry=jugGeometry(false);filterShell.material.opacity=cutaway?.22:.34;tankShell.material.opacity=cutaway?.44:.73;updateUI()};
+document.querySelectorAll('[data-layer]').forEach(input=>{input.onchange=()=>{layers[Number(input.dataset.layer)].visible=input.checked}});
+$('labels').onclick=()=>{labelGroup.visible=!labelGroup.visible;updateUI()};$('reset').onclick=home;$('front').onclick=()=>fitView(true);
+$('overview').onclick=()=>{camera.position.set(14,12,21);controls.target.set(.5,2,-5.5);controls.update()};
+let smallScreen=mobile;
+function resize(){const w=viewport.clientWidth,h=viewport.clientHeight;if(!w||!h)return;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h);const narrow=innerWidth<=900;if(narrow!==smallScreen){smallScreen=narrow;labelGroup.visible=!narrow;$('right').open=!narrow;updateUI()}home()}
+addEventListener('resize',resize);
+document.addEventListener('visibilitychange',()=>{last=performance.now()});
+let contextLost=false;
+renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();contextLost=true;showError('3D rendering paused','Reload the page to restart the prototype.');});
+function animate(now){
+ if(contextLost)return;requestAnimationFrame(animate);const dt=Math.min((now-last)/1000,.1);last=now;if(document.hidden)return;time+=dt;
+ const ease=reducedMotion?1:1-Math.exp(-9*dt);lidPivot.rotation.x+=((lidOpen?-Math.PI*.58:0)-lidPivot.rotation.x)*ease;handle.rotation.y+=((tapOpen?Math.PI/2:0)-handle.rotation.y)*ease;
+ const inlet=running?Math.min(INLET_RATE*dt,(1-level)*TANK_CAPACITY):0;level+=inlet/TANK_CAPACITY;
+ const outlet=tapOpen?Math.min(OUTLET_RATE*dt,level*TANK_CAPACITY,(1-bucketLevel)*BUCKET_CAPACITY):0;
+ level=THREE.MathUtils.clamp(level-outlet/TANK_CAPACITY,0,1);bucketLevel=THREE.MathUtils.clamp(bucketLevel+outlet/BUCKET_CAPACITY,0,1);
+ const th=Math.max(.002,level*1.38);tankWater.scale.y=th;tankWater.position.y=.93+th/2;tankWater.visible=level>.001;tankSurface.visible=tankWater.visible;tankSurface.position.y=.93+th;
+ const bh=.55*bucketLevel,br=bucketBottom+(bucketTop-bucketBottom)*bh/bucketHeight-.015;
+ bucketWater.visible=bucketLevel>.001;bucketWater.scale.y=Math.max(.002,bh);bucketWater.position.y=bucketY+.027+bh/2;
+ for(let i=0;i<bucketWaterVertices.count;i++){const r=bucketWaterUnit[i*3+1]>0?br:bucketBottom-.015;bucketWaterVertices.setX(i,bucketWaterUnit[i*3]*r);bucketWaterVertices.setZ(i,bucketWaterUnit[i*3+2]*r)}bucketWaterVertices.needsUpdate=true;
+ const sy=bucketY+.027+bh;faucetStream.visible=outlet>0;faucetStream.scale.y=1.273-sy;faucetStream.position.y=(1.273+sy)/2;
+ ripples.forEach((r,i)=>{const p=(time*.75+i/3)%1;r.visible=outlet>0&&!reducedMotion;r.position.y=sy+.004;r.scale.setScalar(.2+p*1.35);r.material.opacity=(1-p)*.48});
+ drainFlow.visible=inlet>0;droplets.visible=inlet>0;
+ if(droplets.visible){for(let i=0;i<38;i++){const p=(time*.55+i/38)%1;dummy.position.set(Math.sin(i*3.1)*.4,5.8-p*2.5,Math.cos(i*1.7)*.4);dummy.rotation.set(0,0,0);dummy.scale.set(.8,1.6,.8);dummy.updateMatrix();droplets.setMatrixAt(i,dummy.matrix)}droplets.instanceMatrix.needsUpdate=true}
+ if(!reducedMotion){const pos=riverGeo.attributes.position;for(let i=0;i<pos.count;i++)pos.setY(i,Math.sin(pos.getX(i)*2.3+time*.7)*.009+Math.cos(pos.getZ(i)*6+time*.9)*.007);pos.needsUpdate=true;if(Math.floor(time*10)!==Math.floor((time-dt)*10))riverGeo.computeVertexNormals()}
+ if(now-lastUI>150){updateUI();lastUI=now}controls.update();renderer.render(scene,camera);
+}
+updateUI();
+window.prototypeState=()=>({running,tapOpen,lidOpen,cutaway,tankLevel:level,bucketLevel,base:{width:BASE_SIZE,depth:BASE_SIZE},stand:'wood',layerOrder:definitions.map(d=>d.kind),layers:layers.map(g=>g.visible),labels:labelGroup.visible,lidAngle:lidPivot.rotation.x,streamVisible:faucetStream.visible,canvas:{width:viewport.clientWidth,height:viewport.clientHeight}});
+// Initialize animated geometry before enabling interaction, avoiding a one-frame water flash.
+bucketWater.visible=false;faucetStream.visible=false;droplets.visible=false;tankWater.scale.y=level*1.38;tankWater.position.y=.93+level*1.38/2;tankSurface.position.y=.93+level*1.38;
+renderer.render(scene,camera);document.querySelectorAll('button:disabled,input:disabled').forEach(x=>x.disabled=false);clearTimeout(loadingTimer);$('load').classList.add('hidden');requestAnimationFrame(animate);
+} catch(error){
+ console.error(error);showError('Hindi ma-load ang 3D view','Check your internet connection, allow cdn.jsdelivr.net, and use a browser with WebGL 2 and hardware acceleration enabled.');
+}
+
+</script>
+</body>
+</html>
